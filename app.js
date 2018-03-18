@@ -39,13 +39,6 @@ bot.set('storage', tableStorage);
 bot.dialog('/', function (session) {
     //session.send('You said => ' + session.message.text);
     session.send({
-        "text": "New Help Ticket Received:",
-        "attachments": [
-            {
-                "title": "App hangs on reboot",
-                "title_link": "http://domain.com/ticket/123456",
-                "text": "If I restart my computer without quitting your app, it stops the reboot sequence.\nhttp://domain.com/ticket/123456",
-            }
-        ]
+        "text": session
     });
 });
