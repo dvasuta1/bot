@@ -37,5 +37,8 @@ var bot = new builder.UniversalBot(connector);
 bot.set('storage', tableStorage);
 
 bot.dialog('/', function (session) {
-    session.send('You said => ' + session.message.text);
+    //session.send('You said => ' + session.message.text);
+    session.send({
+        "text": "New Help Ticket Received: http://domain.com/ticket/123456"
+    });
 });
