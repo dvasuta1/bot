@@ -39,6 +39,6 @@ bot.set('storage', tableStorage);
 bot.dialog('/', function (session) {
     //session.send('You said => ' + session.message.text);
     session.send({
-        "text": session
+        "text": session.message
     });
 });
