@@ -36,6 +36,19 @@ var tableStorage = new botbuilder_azure.AzureBotStorage({ gzipData: false }, azu
 var bot = new builder.UniversalBot(connector);
 bot.set('storage', tableStorage);
 
+bot.dialog('help', function (session, args, next) {
+    //Send a help message
+    session.endDialog("Global help menu.");
+}).triggerAction({
+        matches: /^help$/i,
+        onSelectAction: (session, args, next) = > {
+        // Add the help dialog to the top of the dialog stack
+        // (override the default behavior of replacing the stack)
+        session.beginDialog(args.action, args);
+}
+})
+;
+
 bot.dialog('/', function (session) {
     //session.send('You said => ' + session.message.text);
     session.send({
