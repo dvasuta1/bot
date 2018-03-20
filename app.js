@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------------------
- A simple echo bot for the Microsoft Bot Framework.
- -----------------------------------------------------------------------------*/
+A simple echo bot for the Microsoft Bot Framework.
+-----------------------------------------------------------------------------*/
 
 var restify = require('restify');
 var builder = require('botbuilder');
@@ -9,7 +9,7 @@ var botbuilder_azure = require("botbuilder-azure");
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
-    console.log('%s listening to %s', server.name, server.url);
+   console.log('%s listening to %s', server.name, server.url);
 });
 
 // Create chat connector for communicating with the Bot Framework Service
@@ -21,16 +21,21 @@ var connector = new builder.ChatConnector({
 
 // Listen for messages from users 
 server.post('/api/messages', connector.listen());
+server.post('/api/external', function(req, res, next){
+    console.log(req.params);
+    console.log(req.body);
+});
+
 
 /*----------------------------------------------------------------------------------------
- * Bot Storage: This is a great spot to register the private state storage for your bot.
- * We provide adapters for Azure Table, CosmosDb, SQL Azure, or you can implement your own!
- * For samples and documentation, see: https://github.com/Microsoft/BotBuilder-Azure
- * ---------------------------------------------------------------------------------------- */
+* Bot Storage: This is a great spot to register the private state storage for your bot.
+* We provide adapters for Azure Table, CosmosDb, SQL Azure, or you can implement your own!
+* For samples and documentation, see: https://github.com/Microsoft/BotBuilder-Azure
+* ---------------------------------------------------------------------------------------- */
 
 var tableName = 'botdata';
 var azureTableClient = new botbuilder_azure.AzureTableClient(tableName, process.env['AzureWebJobsStorage']);
-var tableStorage = new botbuilder_azure.AzureBotStorage({gzipData: false}, azureTableClient);
+var tableStorage = new botbuilder_azure.AzureBotStorage({ gzipData: false }, azureTableClient);
 
 // Create your bot with a function to receive messages from the user
 var bot = new builder.UniversalBot(connector);
@@ -39,15 +44,19 @@ bot.set('storage', tableStorage);
 bot.dialog('help', function (session, args, next) {
     //Send a help message
     session.endDialog("Global help menu.");
-}).triggerAction({
+})
+// Once triggered, will start a new dialog as specified by
+// the 'onSelectAction' option.
+    .triggerAction({
         matches: /^help$/i,
         onSelectAction: (session, args, next) => {
         // Add the help dialog to the top of the dialog stack
         // (override the default behavior of replacing the stack)
         session.beginDialog(args.action, args);
 }
-})
-;
+});
+
+
 
 bot.dialog('/', function (session) {
     //session.send('You said => ' + session.message.text);
